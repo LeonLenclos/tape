@@ -5,7 +5,7 @@ tape is drawing tool that allows you to draw on a moving tape but doesn't allow 
 - [Try it on itch.io](https://leonlenclos.itch.io/tape)
 - [Try it on github](https://leonlenclos.github.io/mote/src)
 
-![tape logo](logo.png)
+![tape logo](logo.svg)
 
 ## Features
 
