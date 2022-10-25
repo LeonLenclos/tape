@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="constants.js" charset="utf-8"></script>
+    <script src="export.js" charset="utf-8"></script>
+    <script src="utils.js" charset="utf-8"></script>
+    <script src="script.js" charset="utf-8"></script>
+    <script src="display.js" charset="utf-8"></script>
+    <script src="ui.js" charset="utf-8"></script>
+    <script src="mouse.js" charset="utf-8"></script>
+    <script src="tape.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>tape</title>
+  </head>
+  <body>
+    <svg style="position:absolute;z-index:-1;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" refX="5" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+          <path d="m 0,10 5,-5 -5,-5"></path>
+        </marker>
+      </defs>
+    </svg>
+    <div id="tapecontainer">
+      <div id="tape">
+        <div id="tapebg"></div>
+        <div class="wheelaxis left"></div><div class="wheelaxis right"></div>
+        <canvas class="rollcanvas left"></canvas><canvas id="maincanvas"></canvas><canvas class="rollcanvas right"></canvas>
+        <div class="wheel left"></div><div class="wheel right"></div>
+      </div>
+    </div>
+
+
+    <div id="controls">
+      <input type="range" name="pen" value="1" min="1" max="51" step="5"></input>
+      <input type="range" name="color" value="64" min="0" max="256" step="32"></input>
+      <canvas id="pencanvas"   height="50px"  width="150px"></canvas>
+      <input type="range" name="speed" value="0.1" min="0.05" max="1" step="0.05"></input>
+      <button name="export">
+        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+           <path d="m 25,15 v 15" marker-end="url(#arrow)"></path>
+           <!-- <path d="m 15,25 10,10 10,-10"></path> -->
+           <path d="m 15,35 h 20"></path>
+        </svg>
+      </button>
+      <button name="new">
+        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+          <path d="m 15,15 v 20 h 20 v -20 z"></path>
+       </svg>
+      </button>
+    </div>
+
+
+
+
+    <div id="popups">
+    <div class="popup" id="exportdialog">
+      <div class="inputs">
+        <div>
+          <label><svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 30,10 h -20 v 30 h 30 v -20 z"></path>
+            <path d="m 30,10 v 10 h 10"></path>
+          </svg></label>
+          <input type="text" name="name" value="untitled"></input>
+        </div>
+        <div>
+          <label><svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 20,10 h -10 v 30 h 30 v -30 h -15" marker-end="url(#arrow)"></path>
+          </svg></label>
+          <input type="number" name="loop"  value="2" min="1" max="20"></input>
+        </div>
+      </div>
+      <div class="preview">
+        <div id="filename"></div>
+      </div>
+      <div class="actions">
+        <button name="cancel">
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 15,15 20,20"></path>
+            <path d="m 15,35 20,-20"></path>
+          </svg>
+        </button>
+        <button name="ok">
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 10,25 10,10, 20,-20"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="popup" id="newdialog">
+      <div class="inputs">
+        <div>
+        <label>
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 10,10 v 30 h 30 v -30 z"></path>
+            <path marker-start="url(#arrow)" marker-end="url(#arrow)" d="m 10,25 h 30"></path>
+          </svg>
+        </label>
+        <input type="number" name="width"  value="700" min="100" max="3000"></input>
+      </div>
+
+      
+      <div>
+        <label>
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 10,10 v 30 h 30 v -30 z"></path>
+            <path marker-start="url(#arrow)" marker-end="url(#arrow)" d="m 25,10 v 30"></path>
+          </svg>
+        </label>
+        <input type="number" name="height" value="400" min="100" max="600"></input>
+      </div>
+
+      <div>
+        <label>
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 10,10 h 5 v 30 h -5 z"></path>
+            <path d="m 35,10 h 5 v 30 h -5 z"></path>
+            <path marker-start="url(#arrow)" marker-end="url(#arrow)" d="m 15,25 h 20"></path>
+          </svg>
+        </label>
+        <input type="number" name="spacing" value="600" min="100" max="800"></input>
+      </div>
+      </div>
+
+      <div class="preview">
+        <div id="sizepreview">
+          <div class="wheelaxis left"></div><div class="wheelaxis right"></div>
+          <div class="wheel left"></div><div class="wheel right"></div>
+          <div id="canvaspreview"></div>
+          <div id="canvassize"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button name="cancel">
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 15,15 20,20"></path>
+            <path d="m 15,35 20,-20"></path>
+          </svg>
+        </button>
+        <button name="ok">
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 10,25 10,10, 20,-20"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="popup" id="loadingdialog">
+      <div class="preview">
+        <div class="progress"></div>
+      </div>
+      <div class="actions">
+        <button name="cancel">
+          <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <path d="m 15,15 20,20"></path>
+            <path d="m 15,35 20,-20"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  </body>
+</html>
+
